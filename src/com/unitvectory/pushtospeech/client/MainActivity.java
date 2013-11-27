@@ -10,14 +10,22 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -45,7 +53,10 @@ public class MainActivity extends Activity {
 
     private static final String SENDER_ID = "1022031844776";
 
-    private static final String SERVER_URL =
+    private static final String SERVER_URL_WEB =
+            "https://pushtospeech.appspot.com/?id=";
+
+    private static final String SERVER_URL_TOKEN =
             "https://pushtospeech.appspot.com/api/v1/token";
 
     private GoogleCloudMessaging gcm;
@@ -67,6 +78,9 @@ public class MainActivity extends Activity {
 
         this.deviceId = this.getDeviceId(context);
         this.deviceSecret = this.getDeviceSecret(context);
+
+        EditText textEdit = (EditText) this.findViewById(R.id.deviceId);
+        textEdit.setText(this.deviceId);
 
         // Check device for Play Services APK.
         if (checkPlayServices()) {
@@ -114,6 +128,32 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_website:
+                Intent browserIntent =
+                        new Intent(Intent.ACTION_VIEW, Uri.parse(SERVER_URL_WEB
+                                + this.deviceId));
+                startActivity(browserIntent);
+                return true;
+            case R.id.action_about:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void copyText(View view) {
+        ClipboardManager clipboard =
+                (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("id", this.deviceId);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(context, R.string.device_id_copied, Toast.LENGTH_LONG)
+                .show();
     }
 
     /**
@@ -245,7 +285,7 @@ public class MainActivity extends Activity {
     private void sendRegistrationIdToBackend() {
         try {
             HttpClient client = new DefaultHttpClient();
-            HttpPost post = new HttpPost(SERVER_URL);
+            HttpPost post = new HttpPost(SERVER_URL_TOKEN);
             String json =
                     new JSONObject().put("id", this.deviceId)
                             .put("secret", this.deviceSecret)
