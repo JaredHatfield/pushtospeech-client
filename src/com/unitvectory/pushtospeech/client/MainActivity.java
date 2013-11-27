@@ -55,6 +55,8 @@ public class MainActivity extends Activity {
 
     private static final String SENDER_ID = "1022031844776";
 
+    private static final String USER_AGENT = "pushtospeech/client";
+
     private static final String SERVER_URL_WEB =
             "https://pushtospeech.appspot.com/?id=";
 
@@ -299,10 +301,11 @@ public class MainActivity extends Activity {
         try {
             HttpClient client = new DefaultHttpClient();
             HttpPost post = new HttpPost(SERVER_URL_TOKEN);
+            post.setHeader("User-Agent", USER_AGENT);
             String json =
-                    new JSONObject().put("id", this.deviceId)
-                            .put("secret", this.deviceSecret)
-                            .put("token", this.regid).toString();
+                    new JSONObject().put("deviceid", this.deviceId)
+                            .put("devicesecret", this.deviceSecret)
+                            .put("registrationid", this.regid).toString();
             Log.i(TAG, json);
             HttpEntity entity = new StringEntity(json, "UTF-8");
             post.setEntity(entity);
