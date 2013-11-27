@@ -10,9 +10,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -141,6 +143,17 @@ public class MainActivity extends Activity {
                 startActivity(browserIntent);
                 return true;
             case R.id.action_about:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.about_title)
+                        .setMessage(R.string.about_message)
+                        .setPositiveButton(R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                            int id) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                builder.create().show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

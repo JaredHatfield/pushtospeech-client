@@ -7,5 +7,8 @@
     <string name="your_device_identifier">Your Device Identifier</string>
     <string name="copy_identifier">Copy Identifier</string>
     <string name="device_id_copied">Device Id Copied to Clipboard</string>
+    <string name="about_title">Push to Speech</string>
+    <string name="about_message">A UnitVectorY Production</string>
+    <string name="ok">OK</string>
 
 </resources>
