@@ -23,6 +23,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+/**
+ * The Main Activity
+ * 
+ * @author Jared Hatfield
+ * 
+ */
 public class MainActivity extends Activity {
 
     private final static String TAG = "pushtospeech";

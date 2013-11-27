@@ -2,6 +2,12 @@ package com.unitvectory.pushtospeech.client;
 
 import android.speech.tts.UtteranceProgressListener;
 
+/**
+ * The Progress Monitor
+ * 
+ * @author Jared Hatfield
+ * 
+ */
 public class ProgressMonitor extends UtteranceProgressListener {
 
     private boolean busy;
@@ -32,12 +38,18 @@ public class ProgressMonitor extends UtteranceProgressListener {
     public void onStart(String arg) {
     }
 
+    /**
+     * Flag that speech has started.
+     */
     public void startSpeak() {
         synchronized (this.lock) {
             this.busy = true;
         }
     }
 
+    /**
+     * Wait until the speech is done.
+     */
     public void waitSpeakDone() {
         synchronized (this.lock) {
             if (this.busy) {

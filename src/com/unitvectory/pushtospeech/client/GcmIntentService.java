@@ -3,7 +3,6 @@ package com.unitvectory.pushtospeech.client;
 import java.util.HashMap;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -11,11 +10,15 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+/**
+ * The GCM Intent Service
+ * 
+ * @author Jared Hatfield
+ * 
+ */
 public class GcmIntentService extends IntentService implements OnInitListener {
 
     public static final int NOTIFICATION_ID = 1;
-
-    Notification.Builder builder;
 
     private TextToSpeech tts;
 
@@ -71,7 +74,7 @@ public class GcmIntentService extends IntentService implements OnInitListener {
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
 
-        if (!extras.isEmpty()) { // has effect of unparcelling Bundle
+        if (!extras.isEmpty()) {
             /*
              * Filter messages based on message type. Since it is likely that
              * GCM will be extended in the future with new message types, just
