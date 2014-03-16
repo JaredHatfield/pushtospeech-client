@@ -3,7 +3,9 @@ package com.unitvectory.pushtospeech.client;
 import java.util.HashMap;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -16,7 +18,8 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
  * @author Jared Hatfield
  * 
  */
-public class GcmIntentService extends IntentService implements OnInitListener {
+public class GcmIntentService extends IntentService implements OnInitListener,
+        AudioManager.OnAudioFocusChangeListener {
 
     public static final int NOTIFICATION_ID = 1;
 
@@ -101,6 +104,15 @@ public class GcmIntentService extends IntentService implements OnInitListener {
                 // We are going to be speaking
                 if (extras.getString("speak") != null) {
 
+                    // Gain audio focus
+                    AudioManager am =
+                            (AudioManager) this
+                                    .getSystemService(Context.AUDIO_SERVICE);
+                    am.requestAudioFocus(this,
+                            // Use the music stream.
+                            AudioManager.STREAM_MUSIC,
+                            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+
                     // We are going to start speaking
                     this.monitor.startSpeak();
 
@@ -117,12 +129,20 @@ public class GcmIntentService extends IntentService implements OnInitListener {
                     // Wait
                     this.monitor.waitSpeakDone();
 
+                    // Done with the focus
+                    am.abandonAudioFocus(this);
+
                 }
             }
         }
 
         // Release the wake lock provided by the WakefulBroadcastReceiver.
         GcmBroadcastReceiver.completeWakefulIntent(intent);
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+
     }
 
 }
